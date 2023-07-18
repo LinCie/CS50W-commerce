@@ -1,24 +1,33 @@
 {% extends "auctions/layout.html" %}
 
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'auctions/form.css' %}">
+{% endblock css %}
+
 {% block body %}
 
-    <h2>Login</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-    </form>
-
-    Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+    <div class="container-fluid center-container p-5">
+        <h1 class="my-3">Login</h1>
+        <form action="{% url 'login' %}" method="post" id="form" class="center-container mb-3">
+            {% csrf_token %}
+            <div class="mb-3 w-100">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" aria-describedby="userHelp" autocomplete="off">
+                <div id="userHelp" class="form-text">Provide your username.</div>
+            </div>
+            <div class="mb-3 w-100">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="password" aria-describedby="passHelp" autocomplete="off">
+                <div id="passHelp" class="form-text">Provide your password.</div>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Login">
+            {% if message %}
+                <div>{{ message }}</div>
+            {% endif %}
+        </form>
+        <small>Don't have an account? <a href="{% url 'register' %}">Register here.</a></small>
+    </div>
 
 {% endblock %}

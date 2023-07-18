@@ -1,30 +1,43 @@
 {% extends "auctions/layout.html" %}
 
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'auctions/form.css' %}">
+{% endblock css %}
+
 {% block body %}
 
-    <h2>Register</h2>
-
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
-
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
-
-    Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+    <div class="container-fluid center-container">
+        <h1 class="my-3">Register</h1>
+        <form action="{% url 'register' %}" method="post" id="form" class="center-container mb-3">
+            {% csrf_token %}
+            <div class="mb-3 w-100">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" id="username" aria-describedby="userHelp" autocomplete="off">
+                <div id="userHelp" class="form-text">Provide a unique username.</div>
+            </div>
+            <div class="mb-3 w-100">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" autocomplete="off">
+                <div id="emailHelp" class="form-text">Provide an email.</div>
+            </div>
+            <div class="mb-3 w-100">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" id="password" aria-describedby="passHelp" autocomplete="off">
+                <div id="passHelp" class="form-text">Provide a strong password.</div>
+            </div>
+            <div class="mb-3 w-100">
+                <label for="confirmation" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" name="confirmation" id="confirmation" aria-describedby="connfirmHelp" autocomplete="off">
+                <div id="connfirmHelp" class="form-text">Confirm your password.</div>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Register">
+            {% if message %}
+                <div>{{ message }}</div>
+            {% endif %}
+        </form>
+        <small>Already have an account? <a href="{% url 'login' %}">Login here.</a></small>
+    </div>
 
 {% endblock %}

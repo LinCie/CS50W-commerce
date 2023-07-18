@@ -1,3 +1,15 @@
 body {
-    padding: 10px;
+    margin-top: 56px;
+}
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#login-name {
+    text-align: center;
+    min-width: 150px;
 }
