@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'auctions/form.css' %}">
+{% endblock css %}
+
+{% block body %}
+
+    <div class="container-fluid center-container p-5">
+        <h1 class="my-3">Create listing</h1>
+        <form action="{% url 'create' %}" method="post" id="form" class="center-container mb-3">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3 w-100">
+                    <label for="{{ field.name }}" class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.error_message %}
+                        <div id="{{ field.name }}Error" class="form-text text-danger">{{ field.error_message }}</div>
+                    {% else %}
+                        <div id="{{ field.name }}Help" class="form-text">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <input class="btn btn-primary" type="submit" value="List item">
+        </form>
+    </div>
+
+{% endblock %}

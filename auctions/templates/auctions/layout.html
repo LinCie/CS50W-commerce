@@ -12,7 +12,7 @@
     </head>
     <body>
         {% comment %} Navbar {% endcomment %}
-        <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm fixed-top">
+        <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm sticky-top">
             <div class="container-fluid ">
                 <a href="{% url 'index' %}" class="navbar-brand">Auction</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarItems" aria-controls="navbarItems" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,6 +30,15 @@
                             </li>
                         {% endif %}
                         {% if user.is_authenticated %}
+                            {% if request.resolver_match.url_name == 'create' %}
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="{% url 'create' %}">Create Listings</a>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'create' %}">Create Listings</a>
+                                </li>
+                            {% endif %}
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'logout' %}">Log out</a>
                             </li>
