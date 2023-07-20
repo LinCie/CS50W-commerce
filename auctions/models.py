@@ -15,6 +15,7 @@ class Listing(models.Model):
     starting_bid = models.FloatField(("starting bid"), validators=[MinValueValidator(0.01)])
     image_url = models.URLField(("image url"), max_length=256)
     description = models.TextField(("listing description"))
+    datetime = models.DateTimeField(("datetime"), auto_now_add=True)
     
     class Meta:
         verbose_name = ("listing")
