@@ -4,10 +4,23 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
+    gap: 30px;
+}
+
+@media only screen and (max-width: 1024px) {
+    #listing-section {
+        justify-content: center;
+    }
 }
 
 .listing-link {
+    width: 180px;
     text-decoration: none;
+    transition: all 0.15s ease-in-out;
+}
+
+.listing-link:hover {
+    transform: translateY(-8px);
 }
 
 .listing-container {
