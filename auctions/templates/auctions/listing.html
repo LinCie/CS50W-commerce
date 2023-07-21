@@ -13,11 +13,13 @@
             <div id="overlay" class="p-3">
                 <h1 class="text-light">{{ listing.name }}</h1>
                 <div></div>
+                {% if user.is_authenticated %}
                 <form action="" class="me-4">
                     <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to watchlist">
                         <i class="bi bi-bookmark-star"></i>
                     </button>
                 </form>
+                {% endif %}
             </div>
         </div>
         <div id="body-container" class="mx-auto mt-5">
