@@ -22,21 +22,21 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         {% if request.resolver_match.url_name == 'index' %}
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Active Listings</a>
+                                <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                                <a class="nav-link" href="{% url 'index' %}">Home</a>
                             </li>
                         {% endif %}
                         {% if user.is_authenticated %}
                             {% if request.resolver_match.url_name == 'create' %}
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="{% url 'create' %}">Create Listings</a>
+                                    <a class="nav-link active" aria-current="page" href="{% url 'create' %}">Create</a>
                                 </li>
                             {% else %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'create' %}">Create Listings</a>
+                                    <a class="nav-link" href="{% url 'create' %}">Create</a>
                                 </li>
                             {% endif %}
                             <li class="nav-item">
@@ -78,5 +78,9 @@
         {% comment %} Content {% endcomment %}        
         {% block body %}
         {% endblock %}
+        {% comment %} Scripts {% endcomment %}
+        {% block script %}
+        {% endblock script %}
+        <script src="https://kit.fontawesome.com/a64458514f.js" crossorigin="anonymous"></script>
     </body>
 </html>

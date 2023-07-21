@@ -1,0 +1,44 @@
+{% extends "auctions/layout.html" %}
+
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'auctions/listing.css' %}">
+{% endblock css %}
+
+{% block body %}
+    <div id="listing-container">
+        <div id="head-container">
+            <img id="image-bg" src="{{ listing.image_url }}" alt="{{ listing.name }}">
+            <div id="overlay" class="p-3">
+                <h1 class="text-light">{{ listing.name }}</h1>
+                <div></div>
+                <form action="" class="me-4">
+                    <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to watchlist">
+                        <i class="bi bi-bookmark-star"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div id="body-container" class="mx-auto mt-5">
+            <div id="links" class="h6">
+                <i class="fa-solid fa-house" class=""></i>
+                <i class="fa-solid fa-greater-than" class=""></i>
+                <a href="{% url 'index' %}" class="text-body">listing</a>
+                <i class="fa-solid fa-greater-than" class=""></i>
+                <a href="{{ listing.get_absolute_url }}" class="text-body">{{ listing.name }}</a>
+            </div>
+            <h1 class="">{{ listing.name }}</h1>
+            <img id="listing-image" src="{{ listing.image_url }}" alt="{{ listing.name }}">
+            {{ listing.description|linebreaks }}
+        </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+{% endblock script %}

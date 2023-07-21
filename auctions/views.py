@@ -69,8 +69,15 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-def listing_detail_view(request):
-    return
+def listing_detail_view(request, pk):
+    listing = Listing.objects.get(pk=pk)
+    if listing:
+        listing.starting_bid = USD_format(listing.starting_bid)
+        return render(request, "auctions/listing.html", {
+            'listing': listing
+        })
+    else:
+        return redirect("index")
 
 def create(request):
     if request.method == "POST":
