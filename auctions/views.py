@@ -74,16 +74,19 @@ def register(request):
 
 def listing_detail_view(request, pk):
     listing = Listing.objects.get(pk=pk)
-    watchlist, created = Watchlist.objects.get_or_create(user=request.user)
-    if listing:
-        is_watchlist = listing in watchlist.listing.all()
-        listing.starting_bid = USD_format(listing.starting_bid)
-        return render(request, "auctions/listing.html", {
-            'listing': listing,
-            'is_watchlist': is_watchlist
-        })
+    if request.user.is_authenticated:
+        watchlist, created = Watchlist.objects.get_or_create(user=request.user)
+        if listing:
+            is_watchlist = listing in watchlist.listing.all()
+            listing.starting_bid = USD_format(listing.starting_bid)
+            return render(request, "auctions/listing.html", {
+                'listing': listing,
+                'is_watchlist': is_watchlist
+            })
     else:
-        return redirect("index")
+        return render(request, "auctions/listing.html", {
+                'listing': listing
+            })
     
     
 def add_watchlist(request):

@@ -43,6 +43,7 @@
                 <a href="{{ listing.get_absolute_url }}" class="text-body">{{ listing.name }}</a>
             </div>
             <h1 class="">{{ listing.name }}</h1>
+            <h6 class="text-muted">Listed by {{ listing.lister }} on {{ listing.datetime }}</h6>
             <img id="listing-image" src="{{ listing.image_url }}" alt="{{ listing.name }}">
             {{ listing.description|linebreaks }}
         </div>
