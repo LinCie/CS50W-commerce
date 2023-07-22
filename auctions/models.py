@@ -26,3 +26,14 @@ class Listing(models.Model):
 
     def get_absolute_url(self):
         return reverse("listing_detail", kwargs={"pk": self.pk})
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, verbose_name=("username"), on_delete=models.CASCADE)
+    listing = models.ManyToManyField(Listing)
+
+    class Meta:
+        verbose_name = "watchlist"
+        verbose_name_plural = "watchlists"
+
+    def __str__(self):
+        return f"{self.user.username}'s Watchlist"
