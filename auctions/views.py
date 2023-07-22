@@ -10,9 +10,11 @@ from .functions import USD_format
 
 
 def index(request):
-    listings = Listing.objects.all()
-    for listing in listings:
-        listing.starting_bid = USD_format(listing.starting_bid)
+    query = request.GET.get("q")
+    if query:
+        listings = Listing.objects.filter(name__icontains=query)
+    else:
+        listings = Listing.objects.all()
     return render(request, "auctions/index.html", {
         'listings': listings
     })
@@ -69,6 +71,7 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
 def listing_detail_view(request, pk):
     listing = Listing.objects.get(pk=pk)
     watchlist, created = Watchlist.objects.get_or_create(user=request.user)
@@ -81,6 +84,7 @@ def listing_detail_view(request, pk):
         })
     else:
         return redirect("index")
+    
     
 def add_watchlist(request):
     if request.method == "POST":
@@ -100,6 +104,7 @@ def add_watchlist(request):
     else:           
         return redirect("index")
 
+
 def remove_watchlist(request):
     if request.method == "POST":
             user = request.user
@@ -118,10 +123,9 @@ def remove_watchlist(request):
     else:           
         return redirect("index")
 
+
 def watchlist(request):
     watchlist, created = Watchlist.objects.get_or_create(user=request.user)
-    for listing in watchlist.listing.all():
-        listing.starting_bid = USD_format(listing.starting_bid)
     return render(request, "auctions/watchlist.html", {
         'listings': watchlist.listing.all()
     })

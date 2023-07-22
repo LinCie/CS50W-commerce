@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 
 from django.core.validators import MinValueValidator
+from .functions import USD_format
 
 class User(AbstractUser):
     pass
@@ -26,6 +27,9 @@ class Listing(models.Model):
 
     def get_absolute_url(self):
         return reverse("listing_detail", kwargs={"pk": self.pk})
+    
+    def usd_formatted(self):
+        return USD_format(self.starting_bid)
 
 class Watchlist(models.Model):
     user = models.ForeignKey(User, verbose_name=("username"), on_delete=models.CASCADE)

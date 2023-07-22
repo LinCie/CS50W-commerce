@@ -72,8 +72,8 @@
                             {% endif %}
                         {% endif %}
                     </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search listing" aria-label="Search">
+                    <form class="d-flex" action="{% url 'index' %}" method="get">
+                        <input class="form-control me-2" type="search" placeholder="Search listing" aria-label="Search" name="q">
                         <button class="btn btn-outline-secondary" type="submit">Search</button>
                     </form>
                     {% if user.is_authenticated %}
