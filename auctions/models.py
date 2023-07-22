@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
+from django.utils.text import slugify
 
 from django.core.validators import MinValueValidator
 from .functions import USD_format
@@ -31,7 +32,9 @@ class Listing(models.Model):
     def usd_formatted(self):
         return USD_format(self.starting_bid)
 
+
 class Watchlist(models.Model):
+    
     user = models.ForeignKey(User, verbose_name=("username"), on_delete=models.CASCADE)
     listing = models.ManyToManyField(Listing)
 
@@ -41,3 +44,21 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Watchlist"
+
+
+class Category(models.Model):
+
+    name = models.CharField("Category", unique=True, max_length=64)
+    slug = models.SlugField("Slug URL", unique=True, default="")
+    listing = models.ManyToManyField(Listing)
+
+    class Meta:
+        verbose_name = "category"
+        verbose_name_plural = "categories"
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        slug = slugify(self.name)
+        return reverse("category_detail", kwargs={"slug": slug})

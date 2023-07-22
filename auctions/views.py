@@ -3,8 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.text import slugify
 
-from .models import User, Listing, Watchlist
+from .models import User, Listing, Watchlist, Category
 from .forms import ListingForm
 from .functions import USD_format
 
@@ -145,4 +146,26 @@ def create(request):
         form = ListingForm()
     return render(request, "auctions/create.html", {
         'form': form
+    })
+ 
+def category(request):
+    categories = Category.objects.all()
+    return render(request, "auctions/category_view.html", {
+        'categories': categories
+    })
+    
+def new_category(request):
+    name = request.POST["name"]
+    slug = slugify(name)
+    try:
+        category = Category(name=name, slug=slug)
+        category.save()
+    except IntegrityError:
+        return redirect("listing_detail")
+    return redirect("listing_detail")
+    
+def category_view(request, slug):
+    category = Category.objects.get(slug=slug)
+    return render(request, "auctions/category_view.html", {
+        'listings': category.listing.all()
     })
