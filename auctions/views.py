@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User, Listing
+from .models import User, Listing, Watchlist
 from .forms import ListingForm
 from .functions import USD_format
 
@@ -71,12 +71,51 @@ def register(request):
 
 def listing_detail_view(request, pk):
     listing = Listing.objects.get(pk=pk)
+    watchlist, created = Watchlist.objects.get_or_create(user=request.user)
     if listing:
+        is_watchlist = listing in watchlist.listing.all()
         listing.starting_bid = USD_format(listing.starting_bid)
         return render(request, "auctions/listing.html", {
-            'listing': listing
+            'listing': listing,
+            'is_watchlist': is_watchlist
         })
     else:
+        return redirect("index")
+    
+def add_watchlist(request):
+    if request.method == "POST":
+            user = request.user
+            listing_id = request.POST["listing_id"]
+            
+            if listing_id:
+                # Get the listing object
+                listing = Listing.objects.get(pk=listing_id)
+                if listing:
+                    # Get or create watchlist
+                    watchlist, created = Watchlist.objects.get_or_create(user=user)
+                    watchlist.listing.add(listing)
+                    return redirect("listing_detail", pk=listing_id)
+                
+            return redirect("listing_detail", pk=listing_id)
+    else:           
+        return redirect("index")
+
+def remove_watchlist(request):
+    if request.method == "POST":
+            user = request.user
+            listing_id = request.POST["listing_id"]
+            
+            if listing_id:
+                # Get the listing object
+                listing = Listing.objects.get(pk=listing_id)
+                if listing:
+                    # Get or create watchlist
+                    watchlist, created = Watchlist.objects.get_or_create(user=user)
+                    watchlist.listing.remove(listing)
+                    return redirect("listing_detail", pk=listing_id)
+                
+            return redirect("listing_detail", pk=listing_id)
+    else:           
         return redirect("index")
 
 def create(request):

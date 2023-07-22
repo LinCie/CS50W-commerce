@@ -14,11 +14,23 @@
                 <h1 class="text-light">{{ listing.name }}</h1>
                 <div></div>
                 {% if user.is_authenticated %}
-                <form action="" class="me-4">
-                    <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to watchlist">
-                        <i class="bi bi-bookmark-star"></i>
-                    </button>
-                </form>
+                    {% if is_watchlist %}
+                    <form action="{% url 'remove_watchlist' %}" method="post" class="me-5">
+                        {% csrf_token %}
+                        <input type="hidden" name="listing_id" value="{{ listing.pk }}">
+                        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove from watchlist">
+                            <i class="bi bi-bookmark-star"></i>
+                        </button>
+                    </form>
+                    {% else %}
+                    <form action="{% url 'add_watchlist' %}" method="post" class="me-5">
+                        {% csrf_token %}
+                        <input type="hidden" name="listing_id" value="{{ listing.pk }}">
+                        <button type="submit" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to watchlist">
+                            <i class="bi bi-bookmark-x"></i>
+                        </button>
+                    </form>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
