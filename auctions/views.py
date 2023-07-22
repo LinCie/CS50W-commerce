@@ -118,6 +118,14 @@ def remove_watchlist(request):
     else:           
         return redirect("index")
 
+def watchlist(request):
+    watchlist, created = Watchlist.objects.get_or_create(user=request.user)
+    for listing in watchlist.listing.all():
+        listing.starting_bid = USD_format(listing.starting_bid)
+    return render(request, "auctions/watchlist.html", {
+        'listings': watchlist.listing.all()
+    })
+
 def create(request):
     if request.method == "POST":
         form = ListingForm(request.POST)
