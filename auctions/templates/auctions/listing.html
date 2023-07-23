@@ -14,22 +14,16 @@
                 <h1 class="text-light">{{ listing.name }}</h1>
                 <div></div>
                 {% if user.is_authenticated %}
+                    {% comment %} Remove Watchlist {% endcomment %}
                     {% if is_watchlist %}
-                    <form action="{% url 'remove_watchlist' %}" method="post" class="me-5">
-                        {% csrf_token %}
-                        <input type="hidden" name="listing_id" value="{{ listing.pk }}">
-                        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove from watchlist">
+                        <button id="remove_watchlist" class="btn me-5 btn-primary">
                             <i class="bi bi-bookmark-star"></i>
                         </button>
-                    </form>
+                    {% comment %} Add Watchlist {% endcomment %}
                     {% else %}
-                    <form action="{% url 'add_watchlist' %}" method="post" class="me-5">
-                        {% csrf_token %}
-                        <input type="hidden" name="listing_id" value="{{ listing.pk }}">
-                        <button type="submit" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to watchlist">
+                        <button id="add_watchlist" class="btn me-5 btn-secondary">
                             <i class="bi bi-bookmark-x"></i>
                         </button>
-                    </form>
                     {% endif %}
                 {% endif %}
             </div>
@@ -50,10 +44,44 @@
 {% endblock %}
 
 {% block script %}
-    <script>
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
+    <script type="text/javascript">
+        {% comment %} Add Watchlist AJAX {% endcomment %}
+        $('#add_watchlist').click(function(){
+            var button = $(this)
+            $.ajax({
+                type: "POST",
+                url: "{% url 'add_watchlist' %}",
+                data: {
+                    'listing_id': "{{ listing.pk }}",
+                    'csrfmiddlewaretoken': "{{ csrf_token }}"
+                },
+                success: function() {
+                    button.toggleClass("btn-secondary btn-primary");
+                    button.html('<i class="bi bi-bookmark-star"></i>');
+                    button.attr("id", "remove_watchlist");
+
+                    button.blur();
+                }
+            });
+        });
+        {% comment %} Remove Watchlist AJAX {% endcomment %}
+        $('#remove_watchlist').click(function(){
+            var button = $(this)
+            $.ajax({
+                type: "POST",
+                url: "{% url 'remove_watchlist' %}",
+                data: {
+                    'listing_id': "{{ listing.pk }}",
+                    'csrfmiddlewaretoken': "{{ csrf_token }}"
+                },
+                success: function() {
+                    button.toggleClass("btn-secondary btn-primary");
+                    button.html('<i class="bi bi-bookmark-x"></i>');
+                    button.attr("id", "add_watchlist");
+
+                    button.blur();
+                }
+            });
+        });
     </script>
 {% endblock script %}
