@@ -11,17 +11,59 @@
         <div id="head-container">
             <img id="image-bg" src="{{ listing.image_url }}" alt="{{ listing.name }}">
             <div id="overlay" class="p-3">
-                <h1 class="text-light">{{ listing.name }}</h1>
-                <div></div>
+                <div id="title-container">
+                    <h1 id="listing-title" class="text-light">{{ listing.name }}</h1>
+                </div>
+                <div id="flex-empty"></div>
                 {% if user.is_authenticated %}
+                    {% comment %} Category modal {% endcomment %}
+                    {% if listing.lister == request.user %}
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn me-3 btn-success" data-bs-toggle="modal" data-bs-target="#editModal">
+                            <i class="bi bi-pencil"></i>
+                        </button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="editModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="editModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                                <form class="modal-content" action="{% url 'edit' pk=listing.pk %}" method="post" id="form">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel">Edit Listing</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid center-container p-3">
+                                            <div class="center-container">
+                                                {% csrf_token %}
+                                                {% for field in form %}
+                                                    <div class="mb-3 w-100">
+                                                        <label for="{{ field.name }}" class="form-label">{{ field.label }}</label>
+                                                        {{ field }}
+                                                        {% if field.error_message %}
+                                                            <div id="{{ field.name }}Error" class="form-text text-danger">{{ field.error_message }}</div>
+                                                        {% else %}
+                                                            <div id="{{ field.name }}Help" class="form-text">{{ field.help_text }}</div>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endfor %}
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
                     {% comment %} Remove Watchlist {% endcomment %}
                     {% if is_watchlist %}
-                        <button id="remove_watchlist" class="btn me-5 btn-primary">
+                        <button id="remove_watchlist" class="btn me-2 btn-primary">
                             <i class="bi bi-bookmark-star"></i>
                         </button>
                     {% comment %} Add Watchlist {% endcomment %}
                     {% else %}
-                        <button id="add_watchlist" class="btn me-5 btn-secondary">
+                        <button id="add_watchlist" class="btn me-2 btn-secondary">
                             <i class="bi bi-bookmark-x"></i>
                         </button>
                     {% endif %}
@@ -43,11 +85,13 @@
         </div>
 {% endblock %}
 
+{% if user.is_authenticated %}
 {% block script %}
     <script type="text/javascript">
         {% comment %} Add Watchlist AJAX {% endcomment %}
         $('#add_watchlist').click(function(){
             var button = $(this)
+            button.blur()
             $.ajax({
                 type: "POST",
                 url: "{% url 'add_watchlist' %}",
@@ -67,6 +111,7 @@
         {% comment %} Remove Watchlist AJAX {% endcomment %}
         $('#remove_watchlist').click(function(){
             var button = $(this)
+            button.blur()
             $.ajax({
                 type: "POST",
                 url: "{% url 'remove_watchlist' %}",
@@ -78,10 +123,9 @@
                     button.toggleClass("btn-secondary btn-primary");
                     button.html('<i class="bi bi-bookmark-x"></i>');
                     button.attr("id", "add_watchlist");
-
-                    button.blur();
                 }
             });
         });
     </script>
 {% endblock script %}
+{% endif %}

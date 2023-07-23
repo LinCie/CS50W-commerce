@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -75,14 +75,15 @@ def register(request):
 
 def listing_detail_view(request, pk):
     listing = Listing.objects.get(pk=pk)
+    form = ListingForm(instance=listing)
     if request.user.is_authenticated:
         watchlist, created = Watchlist.objects.get_or_create(user=request.user)
         if listing:
             is_watchlist = listing in watchlist.listing.all()
-            listing.starting_bid = USD_format(listing.starting_bid)
             return render(request, "auctions/listing.html", {
                 'listing': listing,
-                'is_watchlist': is_watchlist
+                'is_watchlist': is_watchlist,
+                'form': form
             })
     else:
         return render(request, "auctions/listing.html", {
@@ -148,6 +149,29 @@ def create(request):
     return render(request, "auctions/create.html", {
         'form': form
     })
+    
+def edit(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+
+    if request.method == "POST":
+        if request.user == listing.lister:
+            form = ListingForm(request.POST, instance=listing)
+            if form.is_valid():
+                form.save()
+                return redirect("listing_detail", pk=pk)
+        else:
+            return redirect("listing_detail", pk=pk)
+    else:
+        if request.user == listing.lister:
+            form = ListingForm(instance=listing)
+            return render(request, "edit_listing.html", {
+                "form": form,
+                "listing": listing
+            })
+        else:
+            return redirect("listing_detail", pk=pk)
+
+    return redirect("listing_detaill", pk=pk)
  
  
 def category(request):

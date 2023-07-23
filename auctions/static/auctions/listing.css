@@ -28,12 +28,16 @@
     align-items: flex-end;
 }
 
-#overlay h1 {
-    width: 60%;
+#title-container {
+    width: 80%;
     height: auto;
 }
 
-#overlay div {
+#listing-title {
+    width: 100%;
+}
+
+#flex-empty {
     flex: 1;
 }
 
