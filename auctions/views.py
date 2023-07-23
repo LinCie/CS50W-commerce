@@ -134,6 +134,7 @@ def watchlist(request):
         'listings': watchlist.listing.all()
     })
 
+
 def create(request):
     if request.method == "POST":
         form = ListingForm(request.POST)
@@ -148,21 +149,48 @@ def create(request):
         'form': form
     })
  
+ 
 def category(request):
     categories = Category.objects.all()
     return render(request, "auctions/category_view.html", {
         'categories': categories
     })
     
+    
 def new_category(request):
-    name = request.POST["name"]
-    slug = slugify(name)
-    try:
-        category = Category(name=name, slug=slug)
-        category.save()
-    except IntegrityError:
-        return redirect("listing_detail")
-    return redirect("listing_detail")
+    if request.method == "POST":
+        listing = request.POST["listing"]
+        name = request.POST["name"]
+        slug = slugify(name)
+        try:
+            category = Category(name=name, slug=slug)
+            category.save()
+        except IntegrityError:
+            return redirect("listing_detail", pk=listing)
+    return redirect("listing_detail", pk=listing)
+    
+    
+def add_category(request):
+    if request.method == "POST":
+        listing_id = request.POST.get("listing")
+        category_id = request.POST.get("category")
+
+        if not listing_id or not category_id:
+            return redirect("index")
+
+        try:
+            listing = Listing.objects.get(pk=listing_id)
+            category = Category.objects.get(pk=category_id)
+        except Listing.DoesNotExist:
+            return redirect("listing_detail", pk=listing_id)
+        except Category.DoesNotExist:
+            return redirect("listing_detail", pk=listing_id)
+
+        category.listing.add(listing)
+        return redirect("listing_detail", pk=listing_id)
+
+    return redirect("index")
+        
     
 def category_view(request, slug):
     category = Category.objects.get(slug=slug)
