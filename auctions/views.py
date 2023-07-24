@@ -179,36 +179,37 @@ def category(request):
     return render(request, "auctions/category_view.html", {
         'categories': categories
     })
-    
-    
-def new_category(request):
-    if request.method == "POST":
-        listing = request.POST["listing"]
-        name = request.POST["name"]
-        slug = slugify(name)
-        try:
-            category = Category(name=name, slug=slug)
-            category.save()
-        except IntegrityError:
-            return redirect("listing_detail", pk=listing)
-    return redirect("listing_detail", pk=listing)
-    
-    
+
+
+def get_category(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    categories = Category.objects.filter(listing__pk=listing.pk)
+    return render(request, "auctions/ajax/category_list.html", {
+        'categories': categories
+    })
+
+
 def add_category(request):
     if request.method == "POST":
-        listing_id = request.POST.get("listing")
-        category_id = request.POST.get("category")
+        listing_id = request.POST.get("listing_id")
+        category_name = request.POST.get("category_name")
 
-        if not listing_id or not category_id:
+        if not listing_id or not category_name:
             return redirect("index")
+
+        category_name = category_name.lower()
 
         try:
             listing = Listing.objects.get(pk=listing_id)
-            category = Category.objects.get(pk=category_id)
         except Listing.DoesNotExist:
             return redirect("listing_detail", pk=listing_id)
+
+        try:
+            category = Category.objects.get(name=category_name)
         except Category.DoesNotExist:
-            return redirect("listing_detail", pk=listing_id)
+            category = Category(name=category_name)
+            category.slug = slugify(category_name)
+            category.save()
 
         category.listing.add(listing)
         return redirect("listing_detail", pk=listing_id)
@@ -219,5 +220,6 @@ def add_category(request):
 def category_view(request, slug):
     category = Category.objects.get(slug=slug)
     return render(request, "auctions/category_view.html", {
+        'name': category.name.title(),
         'listings': category.listing.all()
     })

@@ -19,6 +19,7 @@ urlpatterns = [
     
     path("category/", views.category, name="category"),
     path("category/<str:slug>/", views.category_view, name='category_view'),
-    path("new/category/", views.new_category, name="new_category"),
-    path("add/category/", views.add_category, name="add_category")
+    path("category/add", views.add_category, name="add_category"),
+    path("category/get/<int:pk>", views.get_category, name="get_category")
+    
 ]
