@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Listing
+from .models import Listing, Bid
 
 class ListingForm(ModelForm):
     
@@ -47,3 +47,17 @@ class ListingForm(ModelForm):
             "description": "Enter your listing description"
         }
         
+        
+class BidForm(forms.ModelForm):
+    
+    class Meta:
+        model = Bid
+        fields = ("bid",)
+        widgets = {
+            "bid": forms.NumberInput(attrs={
+                "class": "form-control",
+                "id": "bid_input",
+                "autocomplete": "off",
+                "min": "1"
+            })
+        }

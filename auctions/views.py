@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.text import slugify
 
-from .models import User, Listing, Watchlist, Category
-from .forms import ListingForm
+from .models import User, Listing, Watchlist, Category, Bid
+from .forms import ListingForm, BidForm
 from .functions import USD_format
 
 
@@ -75,6 +75,7 @@ def register(request):
 
 def listing_detail_view(request, pk):
     listing = Listing.objects.get(pk=pk)
+    bid_form = BidForm()
     form = ListingForm(instance=listing)
     if request.user.is_authenticated:
         watchlist, created = Watchlist.objects.get_or_create(user=request.user)
@@ -83,7 +84,8 @@ def listing_detail_view(request, pk):
             return render(request, "auctions/listing.html", {
                 'listing': listing,
                 'is_watchlist': is_watchlist,
-                'form': form
+                'form': form,
+                'bid_form': bid_form
             })
     else:
         return render(request, "auctions/listing.html", {
@@ -223,3 +225,38 @@ def category_view(request, slug):
         'name': category.name.title(),
         'listings': category.listing.all()
     })
+    
+    
+def bid(request, pk):
+    if request.method == "POST":
+        form = BidForm(request.POST)
+        if form.is_valid():
+            bid = form.save(commit=False)
+            bid.bidder = request.user
+            listing = get_object_or_404(Listing, pk=pk)
+            bid.listing = listing
+            
+            if bid.bidder == listing.lister:
+                return render(request, "auctions/messages/error.html", {"message": "You can bid your own listing!"})
+            
+            if bid.bid <= listing.starting_bid:
+                return render(request, "auctions/messages/error.html", {"message": "Bid must be more than the starting bid!"})
+            
+            highest_bid = Bid.objects.filter(listing=listing).order_by("-bid").first()
+            if highest_bid is not None:
+                print(highest_bid)
+                if bid.bid <= highest_bid.bid:
+                    return render(request, "auctions/messages/error.html", {"message": "Bid must be more than the current highest bid!"})
+            
+            bid.save()
+            return render(request, "auctions/messages/success.html", {"message": "Bid added!"})
+    
+    return redirect("index")
+    
+def get_bid(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    bids = Bid.objects.filter(listing=listing).order_by("-bid")
+    return render(request, "auctions/ajax/bids.html", {
+        'bids': bids
+    })
+    
