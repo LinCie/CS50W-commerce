@@ -175,8 +175,8 @@ def edit(request, pk):
  
  
 def category(request):
-    categories = Category.objects.all()
-    return render(request, "auctions/category_view.html", {
+    categories = Category.objects.all().order_by('name').values()
+    return render(request, "auctions/category.html", {
         'categories': categories
     })
 
