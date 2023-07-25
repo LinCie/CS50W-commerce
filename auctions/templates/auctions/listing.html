@@ -70,62 +70,67 @@
                 {% endif %}
             </div>
         </div>
-        <div id="body-container" class="mx-auto mt-5">
-            <div id="links" class="h6">
-                <i class="fa-solid fa-house" class=""></i>
-                <i class="fa-solid fa-greater-than" class=""></i>
-                <a href="{% url 'index' %}" class="text-body">listing</a>
-                <i class="fa-solid fa-greater-than" class=""></i>
-                <a href="{{ listing.get_absolute_url }}" class="text-body">{{ listing.name }}</a>
+        <div id="body-container" class="mt-5">
+            <div id="listing-detail" class="mx-5">
+                <div id="links" class="h6">
+                    <i class="fa-solid fa-house" class=""></i>
+                    <i class="fa-solid fa-greater-than" class=""></i>
+                    <a href="{% url 'index' %}" class="text-body">listing</a>
+                    <i class="fa-solid fa-greater-than" class=""></i>
+                    <a href="{{ listing.get_absolute_url }}" class="text-body">{{ listing.name }}</a>
+                </div>
+                <h1 class="">{{ listing.name }}</h1>
+                <h6 class="text-muted">Listed by {{ listing.lister }} on {{ listing.datetime }}</h6>
+                <img id="listing-image" src="{{ listing.image_url }}" alt="{{ listing.name }}">
+                {{ listing.description|linebreaks }}
             </div>
-            <h1 class="">{{ listing.name }}</h1>
-            <h6 class="text-muted">Listed by {{ listing.lister }} on {{ listing.datetime }}</h6>
-            <img id="listing-image" src="{{ listing.image_url }}" alt="{{ listing.name }}">
-            {{ listing.description|linebreaks }}
-            <div class="container-fluid m-0 p-0">
-                <h4>Categories</h4>
-                <div id="category-container">
-                    {% if request.user == listing.lister %}
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
-                            <i class="bi bi-plus"></i>
-                        </button>
-                        <!-- Modal -->
-                        <div class="modal fade" id="categoryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="categoryModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-                                <form class="modal-content" id="category-form">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="categoryModalLabel">Add Category</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="container-fluid center-container p-3">
-                                            <div class="center-container">
-                                                {% csrf_token %}
-                                                <div class="container-fluid center-container p-3">
-                                                    <div class="center-container">
-                                                        {% csrf_token %}
-                                                        <div class="w-100">
-                                                            <input type="hidden" name="listing_id" id="listing_id" value="{{ listing.pk }}">
-                                                            <label for="category_name" class="form-label">Category name</label>
-                                                            <input type="text" class="form-control" id="category_name" name="category_name">
-                                                            <div id="category_nameHelp" class="form-text">Add the category name</div>
+            <div id="sidebar-detail">
+                <div class="container-fluid m-0 p-0">
+                    <h4>Categories</h4>
+                    <div id="category-container">
+                        {% if request.user == listing.lister %}
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#categoryModal">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="categoryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                                    <form class="modal-content" id="category-form">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="categoryModalLabel">Add Category</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="container-fluid center-container p-3">
+                                                <div class="center-container">
+                                                    {% csrf_token %}
+                                                    <div class="container-fluid center-container p-3">
+                                                        <div class="center-container">
+                                                            {% csrf_token %}
+                                                            <div class="w-100">
+                                                                <input type="hidden" name="listing_id" id="listing_id" value="{{ listing.pk }}">
+                                                                <label for="category_name" class="form-label">Category name</label>
+                                                                <input type="text" class="form-control" id="category_name" name="category_name">
+                                                                <div id="category_nameHelp" class="form-text">Add the category name</div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
-                                        <button type="submit" class="btn btn-primary">Add</button>
-                                    </div>
-                                </form>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                                            <button type="submit" class="btn btn-primary">Add</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+        </div>
 {% endblock %}
 
 {% block script %}
