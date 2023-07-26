@@ -96,7 +96,7 @@ class Comment(models.Model):
         verbose_name_plural = _("comments")
 
     def __str__(self):
-        return f"{self.commenter} comments {self.comment} on {self.listing}"
+        return f"{self.commenter}'s comments {self.comment} on {self.listing}"
 
     def get_absolute_url(self):
         return reverse("comment_detail", kwargs={"pk": self.pk})
