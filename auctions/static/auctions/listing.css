@@ -93,13 +93,22 @@
     margin-left: 1rem !important;
 }
 
-#bid-form {
+#bid-form{
     display: flex;
+}
+
+#comment-form {
+    width: 100%;
 }
 
 #bid_input {
     flex: 1;
     margin-right: 1rem !important;
+}
+
+#comment_input {
+    width: 100%;
+    margin-bottom: 1rem !important;
 }
 
 #bids-container,

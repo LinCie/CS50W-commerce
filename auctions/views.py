@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 
 from .models import User, Listing, Watchlist, Category, Bid
-from .forms import ListingForm, BidForm
+from .forms import ListingForm, BidForm, CommentForm
 from .functions import USD_format
 
 
@@ -76,6 +76,7 @@ def register(request):
 def listing_detail_view(request, pk):
     listing = Listing.objects.get(pk=pk)
     bid_form = BidForm()
+    comment_form = CommentForm()
     form = ListingForm(instance=listing)
     if request.user.is_authenticated:
         watchlist, created = Watchlist.objects.get_or_create(user=request.user)
@@ -85,7 +86,8 @@ def listing_detail_view(request, pk):
                 'listing': listing,
                 'is_watchlist': is_watchlist,
                 'form': form,
-                'bid_form': bid_form
+                'bid_form': bid_form,
+                'comment_form': comment_form
             })
     else:
         return render(request, "auctions/listing.html", {

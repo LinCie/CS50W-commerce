@@ -68,9 +68,10 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ("comment",)
         widgets = {
-            "bid": forms.Textarea(attrs={
+            "comment": forms.Textarea(attrs={
                 "class": "form-control",
-                "id": "bid_input",
+                "id": "comment_input",
                 "autocomplete": "off",
+                "rows": "3"
             })
         }

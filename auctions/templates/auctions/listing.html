@@ -143,6 +143,12 @@
                 <div id="comments-container" class="container-fluid overflow-auto m-0 p-0 mt-3">
                     <h4>Comments</h4>
                 </div>
+                <form id="comment-form" class="container-fluid m-0 p-0 mt-3">
+                    {% for field in comment_form %}
+                        {{ field }}
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">comment</button>
+                </form>
             </div>
         </div>
 {% endblock %}
