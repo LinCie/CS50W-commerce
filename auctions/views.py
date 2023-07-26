@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.text import slugify
 
-from .models import User, Listing, Watchlist, Category, Bid, Comment
+from .models import User, Listing, Watchlist, Category, Bid, Comment, Status
 from .forms import ListingForm, BidForm, CommentForm
 from .functions import USD_format
 
@@ -147,6 +147,10 @@ def create(request):
             listing = form.save(commit=False)
             listing.lister = request.user
             listing.save()
+            
+            status = Status(listing=listing)
+            
+            status.save()
             return redirect("index")
     else:
         form = ListingForm()
@@ -288,4 +292,24 @@ def get_comment(request, pk):
     return render(request, "auctions/ajax/comments.html", {
         'comments': comments
     })
+
+
+def status(request, pk):
+    if request.method == "POST":
+        listing = get_object_or_404(Listing, pk=pk)
+        
+        if request.user != listing.lister:
+            return redirect("listing_detail", pk=pk)
+        
+        status = get_object_or_404(Status, listing=listing)
+        highest_bid = Bid.objects.filter(listing=listing).order_by("-bid").first()
+        
+        if highest_bid is not None and status.status == False:
+            status.status = True
+            status.winner = highest_bid.bidder
+            status.save()
+        
+        return redirect("listing_detail", pk=pk)
+        
+    return redirect("index")
     
