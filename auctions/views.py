@@ -255,10 +255,29 @@ def bid(request, pk):
     
     return redirect("index")
     
+    
 def get_bid(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
     bids = Bid.objects.filter(listing=listing).order_by("-bid")
     return render(request, "auctions/ajax/bids.html", {
         'bids': bids
     })
+    
+    
+def comment(request, pk):
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        listing = Listing.objects.get(pk=pk)
+        
+        if form.is_valid() and listing is not None:
+            comment = form.save(commit=False)
+            comment.commenter = request.user
+            comment.listing = listing
+            
+            comment.save()
+            return render(request, "auctions/messages/success.html", {"message": "Comment added!"})
+        
+        return render(request, "auctions/messages/error.html", {"message": "Error while handling comment request"})
+            
+    return redirect("index")
     

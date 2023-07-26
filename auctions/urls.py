@@ -25,6 +25,6 @@ urlpatterns = [
     path("bid/<int:pk>/", views.bid, name="bid"),
     path("bid/<int:pk>/get", views.get_bid, name="get_bid"),
     
-    # path("comment/<int:pk>/", views.comment, name="comment"),
+    path("comment/<int:pk>/", views.comment, name="comment"),
     # path("comment/<int:pk>/get", views.get_comment, name="comment")
 ]
