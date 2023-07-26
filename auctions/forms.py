@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from .models import Listing, Bid
+from .models import Listing, Bid, Comment
 
 class ListingForm(ModelForm):
     
@@ -59,5 +59,18 @@ class BidForm(forms.ModelForm):
                 "id": "bid_input",
                 "autocomplete": "off",
                 "min": "1"
+            })
+        }
+        
+class CommentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Comment
+        fields = ("comment",)
+        widgets = {
+            "bid": forms.Textarea(attrs={
+                "class": "form-control",
+                "id": "bid_input",
+                "autocomplete": "off",
             })
         }
