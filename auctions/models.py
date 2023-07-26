@@ -90,6 +90,7 @@ class Comment(models.Model):
     listing = models.ForeignKey(Listing, verbose_name=_("listing"), on_delete=models.CASCADE)
     commenter = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
     comment = models.TextField(_("comment"))
+    datetime = models.DateTimeField(_("datetime"), auto_now_add=True)
 
     class Meta:
         verbose_name = _("comment")

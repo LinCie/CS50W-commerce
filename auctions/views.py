@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils.text import slugify
 
-from .models import User, Listing, Watchlist, Category, Bid
+from .models import User, Listing, Watchlist, Category, Bid, Comment
 from .forms import ListingForm, BidForm, CommentForm
 from .functions import USD_format
 
@@ -280,4 +280,12 @@ def comment(request, pk):
         return render(request, "auctions/messages/error.html", {"message": "Error while handling comment request"})
             
     return redirect("index")
+
+
+def get_comment(request, pk):
+    listing = get_object_or_404(Listing, pk=pk)
+    comments = Comment.objects.filter(listing=listing).order_by("-datetime")
+    return render(request, "auctions/ajax/bids.html", {
+        'comments': comments
+    })
     
