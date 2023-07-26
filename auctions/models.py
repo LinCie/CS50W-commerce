@@ -102,3 +102,20 @@ class Comment(models.Model):
     def get_absolute_url(self):
         return reverse("comment_detail", kwargs={"pk": self.pk})
 
+
+class Status(models.Model):
+
+    listing = models.OneToOneField(Listing, verbose_name=_("listing"), on_delete=models.CASCADE)
+    status = models.BooleanField(_("status"), default=False)
+    winner = models.ForeignKey(User, verbose_name=_("winner"), null=True, default=None, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _("status")
+        verbose_name_plural = _("statuses")
+
+    def __str__(self):
+        return f"{self.listing} status is {'closed' if self.status else 'open'}"
+
+    def get_absolute_url(self):
+        return reverse("status_detail", kwargs={"pk": self.pk})
+
