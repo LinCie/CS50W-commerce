@@ -83,3 +83,21 @@ class Bid(models.Model):
         
     def usd_formatted(self):
         return USD_format(self.bid)
+
+
+class Comment(models.Model):
+
+    listing = models.ForeignKey(Listing, verbose_name=_("listing"), on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, verbose_name=_("user"), on_delete=models.CASCADE)
+    comment = models.TextField(_("comment"))
+
+    class Meta:
+        verbose_name = _("comment")
+        verbose_name_plural = _("comments")
+
+    def __str__(self):
+        return f"{self.commenter} comments {self.comment} on {self.listing}"
+
+    def get_absolute_url(self):
+        return reverse("comment_detail", kwargs={"pk": self.pk})
+
