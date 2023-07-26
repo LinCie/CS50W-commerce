@@ -78,6 +78,7 @@ def listing_detail_view(request, pk):
     bid_form = BidForm()
     comment_form = CommentForm()
     form = ListingForm(instance=listing)
+    status = get_object_or_404(Status, listing=listing)
     if request.user.is_authenticated:
         watchlist, created = Watchlist.objects.get_or_create(user=request.user)
         if listing:
@@ -87,7 +88,8 @@ def listing_detail_view(request, pk):
                 'is_watchlist': is_watchlist,
                 'form': form,
                 'bid_form': bid_form,
-                'comment_form': comment_form
+                'comment_form': comment_form,
+                'status': status
             })
     else:
         return render(request, "auctions/listing.html", {
