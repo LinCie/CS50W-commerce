@@ -120,6 +120,24 @@
     transition: all 0.15s ease-in-out !important;
 }
 
+.comment-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-body p {
+    margin: 0.5rem !important;
+}
+
+.comment-body p:last-of-type {
+    margin: 0 !important;
+}
+
+.comment-name {
+    display: flex;
+    column-gap: 0.4rem;
+}
+
 @media only screen and (max-width: 1024px) {
     #body-container {
         flex-direction: column;

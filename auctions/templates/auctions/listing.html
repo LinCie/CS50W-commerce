@@ -86,7 +86,7 @@
             </div>
             <div id="sidebar-detail">
                 <div class="container-fluid m-0 p-0">
-                    <h4>Categories</h4>
+                    <h4 class="mb-3">Categories</h4>
                     <div id="category-container" class="overflow-auto">
                         {% if request.user == listing.lister %}
                             <!-- Button trigger modal -->
@@ -130,7 +130,7 @@
                     </div>
                 </div>
                 <div id="bids-container" class="container-fluid overflow-auto m-0 p-0 mt-3">
-                    <h4>Bids</h4>
+                    <h4 class="mb-3">Bids</h4>
                     <h6>Starting bid: {{ listing.usd_formatted }}</h6>
                 </div>
                 <form id="bid-form" class="container-fluid m-0 p-0 mt-3">
@@ -141,7 +141,7 @@
                 </form>
                 <div id="bid-message-container" class="container-fluid m-0 p-0 mt-3"></div>
                 <div id="comments-container" class="container-fluid overflow-auto m-0 p-0 my-3">
-                    <h4>Comments</h4>
+                    <h4 class="mb-3">Comments</h4>
                 </div>
                 <form id="comment-form" class="container-fluid m-0 p-0 mt-3">
                     {% for field in comment_form %}
