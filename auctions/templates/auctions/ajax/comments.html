@@ -1,7 +1,7 @@
 {% for comment in comments %}
     <div class="container-fluid my-1 comment-body">
-        <div class="comment-head">
-            <h6>{{ comment.commenter }}</h6> <small>{{ comment.datetime }}</small>
+        <div class="comment-name">
+            <h6>{{ comment.commenter }}</h6> <small class="text-muted">{{ comment.datetime }}</small>
         </div>
         {{ comment.comment|linebreaks }}
     </div>

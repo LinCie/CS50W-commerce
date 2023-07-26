@@ -269,7 +269,7 @@ def comment(request, pk):
         form = CommentForm(request.POST)
         listing = Listing.objects.get(pk=pk)
         
-        if form.is_valid() and listing is not None:
+        if form.is_valid():
             comment = form.save(commit=False)
             comment.commenter = request.user
             comment.listing = listing
@@ -285,7 +285,7 @@ def comment(request, pk):
 def get_comment(request, pk):
     listing = get_object_or_404(Listing, pk=pk)
     comments = Comment.objects.filter(listing=listing).order_by("-datetime")
-    return render(request, "auctions/ajax/bids.html", {
+    return render(request, "auctions/ajax/comments.html", {
         'comments': comments
     })
     

@@ -140,7 +140,7 @@
                     <button type="submit" class="btn btn-primary">Bid</button>
                 </form>
                 <div id="bid-message-container" class="container-fluid m-0 p-0 mt-3"></div>
-                <div id="comments-container" class="container-fluid overflow-auto m-0 p-0 mt-3">
+                <div id="comments-container" class="container-fluid overflow-auto m-0 p-0 my-3">
                     <h4>Comments</h4>
                 </div>
                 <form id="comment-form" class="container-fluid m-0 p-0 mt-3">
@@ -149,6 +149,7 @@
                     {% endfor %}
                     <button type="submit" class="btn btn-primary">comment</button>
                 </form>
+                <div id="comment-message-container" class="container-fluid m-0 p-0 my-3"></div>
             </div>
         </div>
 {% endblock %}
@@ -259,10 +260,11 @@
                 .catch(function(error) {
                     console.error('Error fetching the page:', error);
                 });
-            }
+            };
         
             fetchBids();
-        
+            
+            // bid form ajax
             $("#bid-form").submit(function(e) {
                 e.preventDefault();   
                 bid = $("#bid_input").val();
@@ -278,6 +280,46 @@
                         $("#bid-message-container").empty();
                         $("#bid-message-container").append(response);
                         fetchBids();
+                    }
+                });
+            });
+
+            // Fetch comment ajax
+            function fetchComment() {
+                fetch('{% url 'get_comment' pk=listing.pk %}')
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(function(comment) {
+                    $('.comment-body').remove();
+                    $('#comments-container').append(comment);
+                })
+                .catch(function(error) {
+                    console.error('Error fetching the page:', error);
+                });
+            };
+
+            fetchComment();
+
+            // Comment form ajax
+            $("#comment-form").submit(function(e) {
+                e.preventDefault();   
+                comment = $("#comment_input").val();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'comment' pk=listing.pk %}",
+                    data: {
+                        'csrfmiddlewaretoken': "{{ csrf_token }}",
+                        'comment': comment
+                    },
+                    success: function(response) {
+                        $("#comment_input").val("");
+                        $("#comment-message-container").empty();
+                        $("#comment-message-container").append(response);
+                        fetchComment();
                     }
                 });
             });
